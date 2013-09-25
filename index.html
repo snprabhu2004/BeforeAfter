@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>Before &amp; After - jQuery Plugin</title>
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<style type="text/css">
+			.beforeAfter,.before,.after{ overflow: hidden; display: block; float: left}
+			.beforeAfter{ position: relative}
+			.before{ position: absolute; left: 0; top: 0; z-index: 99; overflow: hidden}
+			.after{ position: relative; z-index: 9}
+			.handler{ width: 48px; height: 500px; background: #ccc; position: absolute; z-index: 999; background: url("handler.png") no-repeat center top}
+			.dot{background: url("dot.png") no-repeat; position: absolute; z-index: 999; width: 47px; height: 47px}
+		</style>
+
+	</head>
+<body>
+	<div class="beforeAfter">		
+		<div class="before"><img src="before.jpg" /></div>
+		<div class="after"><img src="after.jpg" /></div>
+	</div>
+
+	<div class="beforeAfter">
+		<div class="before"><img src="before.jpg" /></div>
+		<div class="after"><img src="after.jpg" /></div>
+	</div>
+
+	<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script>
+		(function($){
+			$.fn.beforeAfter = function(params){
+				params = $.extend({},params);
+				return this.each(function(){
+					var sliderContainer = $(this);
+					sliderContainer.append("<div class='handler'></div><div class='dot'></div>");
+
+					var handler = $(".handler",sliderContainer);
+					var dot = $(".dot",sliderContainer);
+					var beforePic = $(".before",sliderContainer);
+					var itemWidth = sliderContainer.width();
+					var itemHeight = sliderContainer.height();
+					
+					handler.css({"left": itemWidth+"px"});
+					dot.css({"left":itemWidth+"px","top":(itemHeight/2)+"px"});
+					beforePic.css({"width": itemWidth+"px"});
+
+					handler.animate({left: (itemWidth/2)+"px"},1000);
+					dot.animate({left:(itemWidth/2)+"px",top:(itemHeight/2)+"px"},1000);
+					beforePic.animate({width: ((itemWidth/2)+(handler.width()/2))+"px"},1000);
+
+					sliderContainer.mousemove(function(evt){
+						handler.css("left",evt.pageX-this.offsetLeft-(handler.width()/2)+"px");
+						dot.css({"left":evt.pageX-this.offsetLeft-(dot.width()/2)+"px","top":evt.pageY-this.offsetTop-(dot.height()/2)+"px"});
+						beforePic.css("width",((evt.pageX-this.offsetLeft))+"px");
+						
+					});
+					
+				});
+			}
+		})(jQuery)
+		jQuery(function(){
+			$(".beforeAfter").beforeAfter();
+		})
+		</script>
+
+</body>
+</html>
